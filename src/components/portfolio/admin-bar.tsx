@@ -11,7 +11,7 @@ const chip =
   "inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-medium transition-colors border border-border bg-card hover:bg-accent";
 
 export function AdminBar() {
-  const { isAdmin, editMode, setEditMode, dirty, saving, save, reload, content, update } = usePortfolio();
+  const { isAdmin, editMode, setEditMode, dirty, saving, save, reload, content } = usePortfolio();
   const [panel, setPanel] = useState<"none" | "theme" | "sections">("none");
   const navigate = useNavigate();
 
@@ -94,9 +94,6 @@ export function AdminBar() {
         {!editMode && dirty && (
           <p className="text-center text-xs text-muted-foreground">Modifications non publiées.</p>
         )}
-        <span className="hidden" aria-hidden>
-          {typeof update}
-        </span>
       </div>
     </div>
   );

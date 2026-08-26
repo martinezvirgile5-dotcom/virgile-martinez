@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Toaster } from "@/components/ui/sonner";
-import { PortfolioProvider, usePortfolio } from "@/lib/portfolio-store";
+import { usePortfolio } from "@/lib/portfolio-store";
 import { SectionRenderer } from "@/components/portfolio/sections";
 import { Hero } from "@/components/portfolio/hero";
 import { SiteNav } from "@/components/portfolio/site-nav";
@@ -32,12 +31,9 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   return (
-    <PortfolioProvider>
-      <ThemeVars>
-        <PortfolioBody />
-      </ThemeVars>
-      <Toaster position="top-center" />
-    </PortfolioProvider>
+    <ThemeVars>
+      <PortfolioBody />
+    </ThemeVars>
   );
 }
 

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Printer } from "lucide-react";
-import { PortfolioProvider, usePortfolio } from "@/lib/portfolio-store";
+import { usePortfolio } from "@/lib/portfolio-store";
 import type { Section } from "@/lib/portfolio-content";
 
 export const Route = createFileRoute("/cv")({
@@ -19,11 +19,7 @@ export const Route = createFileRoute("/cv")({
     ],
     links: [{ rel: "canonical", href: "/cv" }],
   }),
-  component: () => (
-    <PortfolioProvider>
-      <CvPage />
-    </PortfolioProvider>
-  ),
+  component: CvPage,
 });
 
 function CvPage() {

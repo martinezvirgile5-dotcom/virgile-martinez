@@ -382,6 +382,7 @@ function ProjectsSection({ section, index }: { section: Extract<Section, { kind:
 /* --------------------------------- skills --------------------------------- */
 
 function SkillsSection({ section, index }: { section: Extract<Section, { kind: "skills" }>; index: number }) {
+  const { editMode } = usePortfolio();
   const patch = useSection<typeof section>(index);
   const setGroups = (fn: (groups: SkillGroup[]) => SkillGroup[]) => patch((s) => void (s.groups = fn(s.groups)));
 
@@ -398,7 +399,7 @@ function SkillsSection({ section, index }: { section: Extract<Section, { kind: "
                 value={group.name}
                 onChange={(v) => setGroups((gs) => gs.map((g) => (g.id === group.id ? { ...g, name: v } : g)))}
               />
-              {usePortfolio().editMode ? (
+              {editMode ? (
                 <EditableText
                   multiline
                   className="w-full text-sm text-muted-foreground"

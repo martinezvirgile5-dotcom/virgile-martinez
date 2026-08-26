@@ -14,16 +14,6 @@ export function Hero() {
       />
       <div className="relative mx-auto grid w-full max-w-5xl gap-12 px-6 pb-16 pt-28 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] md:items-end md:pb-24 md:pt-40">
         <div className="space-y-7">
-          <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5">
-              <span className="size-1.5 rounded-full bg-brand" aria-hidden />
-              <EditableText
-                className="text-xs text-muted-foreground"
-                value={hero.availability}
-                onChange={(v) => update((d) => void (d.hero.availability = v))}
-              />
-            </div>
-          </Reveal>
           <Reveal delay={60}>
             <h1 className="display-xl">
               <EditableText

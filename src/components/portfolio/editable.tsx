@@ -17,8 +17,8 @@ export function EditableText({
   value: string;
   onChange: (next: string) => void;
   as?: ElementType;
-  className?: string;
-  multiline?: boolean;
+  className?: string | undefined;
+  multiline?: boolean | undefined;
   placeholder?: string;
 }) {
   const { editMode } = usePortfolio();
@@ -67,7 +67,7 @@ export function Reveal({
   delay = 0,
 }: {
   children: ReactNode;
-  className?: string;
+  className?: string | undefined;
   delay?: number;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -149,8 +149,8 @@ export function LinkEditor({
 }: {
   links: LinkItem[];
   onChange: (next: LinkItem[]) => void;
-  render?: "inline" | "cta";
-  withVariant?: boolean;
+  render?: "inline" | "cta" | undefined;
+  withVariant?: boolean | undefined;
 }) {
   const { editMode } = usePortfolio();
 
@@ -227,12 +227,12 @@ export function ImageField({
   alt,
   hint = "Image",
 }: {
-  url?: string;
+  url?: string | undefined;
   onChange: (next: string | undefined) => void;
-  className?: string;
-  imgClassName?: string;
+  className?: string | undefined;
+  imgClassName?: string | undefined;
   alt: string;
-  hint?: string;
+  hint?: string | undefined;
 }) {
   const { editMode } = usePortfolio();
   const [busy, setBusy] = useState(false);
@@ -301,11 +301,11 @@ export function ItemToolbar({
   onDelete,
   className,
 }: {
-  onUp?: () => void;
-  onDown?: () => void;
-  onDuplicate?: () => void;
-  onDelete?: () => void;
-  className?: string;
+  onUp?: (() => void) | undefined;
+  onDown?: (() => void) | undefined;
+  onDuplicate?: (() => void) | undefined;
+  onDelete?: (() => void) | undefined;
+  className?: string | undefined;
 }) {
   const { editMode } = usePortfolio();
   if (!editMode) return null;

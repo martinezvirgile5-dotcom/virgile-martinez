@@ -5,7 +5,7 @@ export type LinkItem = {
   id: string;
   label: string;
   url: string;
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "ghost" | undefined;
 };
 
 export type Experience = {
@@ -13,8 +13,8 @@ export type Experience = {
   company: string;
   role: string;
   period: string;
-  location?: string;
-  logoUrl?: string;
+  location?: string | undefined;
+  logoUrl?: string | undefined;
   achievements: string[];
   links: LinkItem[];
 };
@@ -27,7 +27,7 @@ export type Project = {
   approach: string;
   decisions: string;
   results: string;
-  imageUrl?: string;
+  imageUrl?: string | undefined;
   links: LinkItem[];
 };
 
@@ -73,7 +73,7 @@ export type PortfolioContent = {
     title: string;
     tagline: string;
     availability: string;
-    portraitUrl?: string;
+    portraitUrl?: string | undefined;
     cvUrl: string;
     ctas: LinkItem[];
   };

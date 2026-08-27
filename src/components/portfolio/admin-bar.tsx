@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Check, LogOut, Palette, Pencil, Plus, RotateCcw, Save } from "lucide-react";
+import { Check, Languages, LogOut, Palette, Pencil, Plus, RotateCcw, Save } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { usePortfolio } from "@/lib/portfolio-store";
@@ -11,7 +11,8 @@ const chip =
   "inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-medium transition-colors border border-border bg-card hover:bg-accent";
 
 export function AdminBar() {
-  const { isAdmin, editMode, setEditMode, dirty, saving, save, reload, content } = usePortfolio();
+  const { isAdmin, editMode, setEditMode, dirty, saving, save, reload, content, translateAll, translating, missingCount } =
+    usePortfolio();
   const [panel, setPanel] = useState<"none" | "theme" | "sections">("none");
   const navigate = useNavigate();
 
@@ -40,6 +41,26 @@ export function AdminBar() {
           >
             <Pencil className="size-3.5" />
             {editMode ? "Mode édition actif" : "Modifier"}
+          </button>
+          <button
+            type="button"
+            disabled={translating}
+            className={cn(chip, "disabled:opacity-50")}
+            onClick={async () => {
+              try {
+                const count = await translateAll();
+                toast.success(
+                  count > 0
+                    ? `${count} textes traduits en anglais — pensez à publier`
+                    : "Traduction anglaise déjà à jour",
+                );
+              } catch {
+                toast.error("Échec de la traduction automatique");
+              }
+            }}
+          >
+            <Languages className="size-3.5" />
+            {translating ? "Traduction…" : missingCount > 0 ? `Traduire (${missingCount})` : "Traduction à jour"}
           </button>
           <button type="button" className={chip} onClick={() => setPanel(panel === "theme" ? "none" : "theme")}>
             <Palette className="size-3.5" />

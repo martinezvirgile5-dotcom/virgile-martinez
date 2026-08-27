@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Printer } from "lucide-react";
 import { usePortfolio } from "@/lib/portfolio-store";
+import { t } from "@/lib/i18n";
 import type { Section } from "@/lib/portfolio-content";
 
 export const Route = createFileRoute("/cv")({
@@ -23,20 +24,20 @@ export const Route = createFileRoute("/cv")({
 });
 
 function CvPage() {
-  const { content, status } = usePortfolio();
+  const { content, status, locale } = usePortfolio();
   const { hero } = content;
 
   useEffect(() => {
     document.documentElement.classList.remove("dark");
   }, []);
 
-  if (status === "loading") return <div className="p-10 text-sm text-muted-foreground">Chargement…</div>;
+  if (status === "loading") return <div className="p-10 text-sm text-muted-foreground">{t("loading", locale)}</div>;
 
   return (
     <div className="mx-auto max-w-3xl px-8 py-12 text-[13px] leading-relaxed">
       <div className="no-print mb-8 flex items-center justify-between gap-4">
         <Link to="/" className="link-underline text-xs text-muted-foreground">
-          ← Retour au portfolio
+          {t("backToPortfolio", locale)}
         </Link>
         <div className="flex gap-2">
           {hero.cvUrl && (
@@ -46,7 +47,7 @@ function CvPage() {
               rel="noreferrer noopener"
               className="inline-flex items-center gap-2 rounded-full border border-border-strong px-4 py-2 text-xs font-medium"
             >
-              CV PDF original
+              {t("originalPdf", locale)}
             </a>
           )}
           <button
@@ -55,7 +56,7 @@ function CvPage() {
             className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-xs font-medium text-brand-foreground"
           >
             <Printer className="size-3.5" />
-            Télécharger en PDF
+            {t("downloadPdf", locale)}
           </button>
         </div>
       </div>

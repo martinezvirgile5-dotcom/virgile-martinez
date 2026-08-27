@@ -2,6 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { Context, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { mergeContent, type PortfolioContent } from "./portfolio-content";
+import { applyDictionary, collectStrings, missingStrings, type Locale } from "./i18n";
+import { translateStrings } from "./translate.functions";
 
 type Status = "loading" | "ready" | "error";
 
@@ -18,6 +20,12 @@ type Store = {
   reload: () => Promise<void>;
   mode: "light" | "dark";
   toggleMode: () => void;
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
+  toggleLocale: () => void;
+  translating: boolean;
+  translateAll: (options?: { force?: boolean }) => Promise<number>;
+  missingCount: number;
 };
 
 type PortfolioGlobal = typeof globalThis & {
@@ -42,6 +50,8 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [mode, setMode] = useState<"light" | "dark">("light");
+  const [locale, setLocale] = useState<Locale>("fr");
+  const [translating, setTranslating] = useState(false);
   const loaded = useRef(false);
 
   const reload = useCallback(async () => {
@@ -60,6 +70,16 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
     loaded.current = true;
     void reload();
   }, [reload]);
+
+  useEffect(() => {
+    const storedLocale = window.localStorage.getItem("portfolio-locale");
+    if (storedLocale === "en" || storedLocale === "fr") setLocale(storedLocale);
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("portfolio-locale", locale);
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   useEffect(() => {
     const stored = window.localStorage.getItem("portfolio-mode");
@@ -110,11 +130,41 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
     setDirty(false);
   }, [content]);
 
+  const translateAll = useCallback(
+    async (options?: { force?: boolean }) => {
+      const targets = options?.force
+        ? collectStrings(content)
+        : missingStrings(content, content.translations?.en);
+      if (targets.length === 0) return 0;
+      setTranslating(true);
+      try {
+        const { dictionary } = await translateStrings({ data: { strings: targets.slice(0, 400) } });
+        update((draft) => {
+          draft.translations = { en: { ...(draft.translations?.en ?? {}), ...dictionary } };
+        });
+        return Object.keys(dictionary).length;
+      } finally {
+        setTranslating(false);
+      }
+    },
+    [content, update],
+  );
+
+  const toggleLocale = useCallback(() => setLocale((l) => (l === "fr" ? "en" : "fr")), []);
+
   const toggleMode = useCallback(() => setMode((m) => (m === "dark" ? "light" : "dark")), []);
+
+  // Edition always happens on the French source document.
+  const editing = isAdmin && editMode;
+  const translated = useMemo(
+    () => (locale === "en" && !editing ? applyDictionary(content, content.translations?.en) : content),
+    [content, locale, editing],
+  );
+  const missingCount = useMemo(() => missingStrings(content, content.translations?.en).length, [content]);
 
   const value = useMemo<Store>(
     () => ({
-      content,
+      content: translated,
       status,
       isAdmin,
       editMode: isAdmin && editMode,
@@ -126,8 +176,31 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
       reload,
       mode,
       toggleMode,
+      locale,
+      setLocale,
+      toggleLocale,
+      translating,
+      translateAll,
+      missingCount,
     }),
-    [content, status, isAdmin, editMode, dirty, saving, update, save, reload, mode, toggleMode],
+    [
+      translated,
+      status,
+      isAdmin,
+      editMode,
+      dirty,
+      saving,
+      update,
+      save,
+      reload,
+      mode,
+      toggleMode,
+      locale,
+      toggleLocale,
+      translating,
+      translateAll,
+      missingCount,
+    ],
   );
 
   return <PortfolioContext.Provider value={value}>{children}</PortfolioContext.Provider>;

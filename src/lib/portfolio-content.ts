@@ -89,6 +89,8 @@ export type PortfolioContent = {
   };
   seo: { title: string; description: string };
   sections: Section[];
+  /** Dictionnaires de traduction : texte source (fr) -> traduction. */
+  translations?: { en?: Record<string, string> } | undefined;
 };
 
 export const uid = () => Math.random().toString(36).slice(2, 10);
@@ -408,5 +410,6 @@ export function mergeContent(raw: unknown): PortfolioContent {
     hero: { ...defaultContent.hero, ...value.hero },
     seo: { ...defaultContent.seo, ...value.seo },
     sections: Array.isArray(value.sections) ? value.sections : defaultContent.sections,
+    translations: { en: value.translations?.en ?? {} },
   };
 }

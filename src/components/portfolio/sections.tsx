@@ -235,6 +235,10 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                       value={item.role}
                       onChange={(v) => patchItem(item.id, { role: v })}
                     />
+                    <SummaryField
+                      value={item.summary ?? ""}
+                      onChange={(v) => patchItem(item.id, { summary: v })}
+                    />
                   </div>
                   <AchievementList
                     lines={item.achievements}

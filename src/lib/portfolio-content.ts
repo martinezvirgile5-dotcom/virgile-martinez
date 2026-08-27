@@ -13,6 +13,7 @@ export type Position = {
   role: string;
   period: string;
   achievements: string[];
+  links?: LinkItem[] | undefined;
 };
 
 export type Experience = {
@@ -363,6 +364,7 @@ export const emptyPosition = (): Position => ({
   role: "Poste précédent dans l'entreprise",
   period: "20XX — 20XX",
   achievements: ["Réalisation clé avec une métrique."],
+  links: [],
 });
 
 export const emptyProject = (): Project => ({

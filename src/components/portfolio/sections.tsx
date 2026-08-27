@@ -305,7 +305,7 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                         <ul className="space-y-2">
                           {pos.achievements.map((line, li) => (
                             <li key={li} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
-                              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-border" aria-hidden />
+                              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-brand" aria-hidden />
                               <EditableText
                                 multiline
                                 className="flex-1"

@@ -12,6 +12,8 @@ export type Position = {
   id: string;
   role: string;
   period: string;
+  /** Résumé court affiché juste sous l'intitulé du poste. */
+  summary?: string | undefined;
   achievements: string[];
   links?: LinkItem[] | undefined;
 };
@@ -23,6 +25,8 @@ export type Experience = {
   period: string;
   location?: string | undefined;
   logoUrl?: string | undefined;
+  /** Résumé court affiché juste sous l'intitulé du poste. */
+  summary?: string | undefined;
   achievements: string[];
   /** Postes supplémentaires occupés dans la même entreprise (promotions, mobilité). */
   positions?: Position[] | undefined;

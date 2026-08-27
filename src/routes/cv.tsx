@@ -126,6 +126,9 @@ function CvSection({ section }: { section: Section }) {
                     {item.location ? ` · ${item.location}` : ""}
                   </p>
                 </div>
+                {item.summary?.trim() && (
+                  <p className="mt-1 whitespace-pre-line text-muted-foreground">{item.summary}</p>
+                )}
                 <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
                   {item.achievements.map((a, i) => (
                     <li key={i}>{a}</li>
@@ -137,6 +140,9 @@ function CvSection({ section }: { section: Section }) {
                       <p className="font-medium">{pos.role}</p>
                       <p className="text-xs text-muted-foreground">{pos.period}</p>
                     </div>
+                    {pos.summary?.trim() && (
+                      <p className="mt-1 whitespace-pre-line text-muted-foreground">{pos.summary}</p>
+                    )}
                     <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
                       {pos.achievements.map((a, i) => (
                         <li key={i}>{a}</li>

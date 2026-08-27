@@ -183,6 +183,22 @@ function EditModeOnly({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+/** Résumé court sous l'intitulé du poste : masqué en lecture s'il est vide. */
+function SummaryField({ value, onChange }: { value: string; onChange: (next: string) => void }) {
+  const { editMode } = usePortfolio();
+  if (!editMode && !value.trim()) return null;
+  return (
+    <EditableText
+      as="p"
+      multiline
+      placeholder="Résumé du poste…"
+      className="mt-2 text-sm leading-relaxed text-muted-foreground"
+      value={value}
+      onChange={onChange}
+    />
+  );
+}
+
 /* ------------------------------- experience ------------------------------- */
 
 function ExperienceSection({ section, index }: { section: Extract<Section, { kind: "experience" }>; index: number }) {
@@ -235,6 +251,10 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                       value={item.role}
                       onChange={(v) => patchItem(item.id, { role: v })}
                     />
+                    <SummaryField
+                      value={item.summary ?? ""}
+                      onChange={(v) => patchItem(item.id, { summary: v })}
+                    />
                   </div>
                   <AchievementList
                     lines={item.achievements}
@@ -277,6 +297,10 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                             className="font-mono text-xs tracking-wide text-muted-foreground"
                             value={pos.period}
                             onChange={(v) => patchPos({ period: v })}
+                          />
+                          <SummaryField
+                            value={pos.summary ?? ""}
+                            onChange={(v) => patchPos({ summary: v })}
                           />
                         </div>
                         <AchievementList

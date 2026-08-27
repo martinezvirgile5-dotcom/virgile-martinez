@@ -10,6 +10,7 @@ import {
   type Experience,
   type Metric,
   type PortfolioContent,
+  type Position,
   type Project,
   type Section,
   type SkillGroup,

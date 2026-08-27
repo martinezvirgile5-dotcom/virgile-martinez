@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ElementType, type ReactNode } from "react";
-import { ArrowDown, ArrowUp, Copy, ImagePlus, Loader2, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Copy, GripVertical, ImagePlus, Loader2, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { uploadMedia, usePortfolio } from "@/lib/portfolio-store";
 import { uid, type LinkItem } from "@/lib/portfolio-content";
@@ -343,4 +343,101 @@ export function move<T>(list: T[], index: number, direction: -1 | 1): T[] {
   const [item] = next.splice(index, 1);
   next.splice(target, 0, item as T);
   return next;
+}
+
+/* ---------------------------- réalisations (DnD) --------------------------- */
+
+export function AchievementList({
+  lines,
+  onChange,
+  className,
+}: {
+  lines: string[];
+  onChange: (next: string[]) => void;
+  className?: string | undefined;
+}) {
+  const { editMode } = usePortfolio();
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
+
+  const reorder = (from: number, to: number) => {
+    if (from === to || to < 0 || to >= lines.length) return;
+    const next = [...lines];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item as string);
+    onChange(next);
+  };
+
+  return (
+    <ul className={cn("space-y-2", className)}>
+      {lines.map((line, li) => (
+        <li
+          key={li}
+          className={cn(
+            "flex gap-3 rounded-md text-sm leading-relaxed text-muted-foreground transition-colors",
+            editMode && dragIndex !== null && overIndex === li && dragIndex !== li && "bg-brand-soft/70",
+            editMode && dragIndex === li && "opacity-50",
+          )}
+          onDragOver={(e) => {
+            if (dragIndex === null) return;
+            e.preventDefault();
+            setOverIndex(li);
+          }}
+          onDrop={(e) => {
+            if (dragIndex === null) return;
+            e.preventDefault();
+            reorder(dragIndex, li);
+            setDragIndex(null);
+            setOverIndex(null);
+          }}
+        >
+          {editMode ? (
+            <button
+              type="button"
+              draggable
+              aria-label="Déplacer la réalisation"
+              title="Glisser pour déplacer · ⌘/Ctrl + ↑ ↓"
+              className="mt-1 cursor-grab rounded p-0.5 text-muted-foreground hover:bg-accent hover:text-foreground active:cursor-grabbing"
+              onDragStart={() => setDragIndex(li)}
+              onDragEnd={() => {
+                setDragIndex(null);
+                setOverIndex(null);
+              }}
+              onKeyDown={(e) => {
+                if (!(e.metaKey || e.ctrlKey)) return;
+                if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  reorder(li, li - 1);
+                }
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  reorder(li, li + 1);
+                }
+              }}
+            >
+              <GripVertical className="size-3.5" />
+            </button>
+          ) : (
+            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-brand" aria-hidden />
+          )}
+          <EditableText
+            multiline
+            className="flex-1"
+            value={line}
+            onChange={(v) => onChange(lines.map((a, ai) => (ai === li ? v : a)))}
+          />
+          {editMode && (
+            <button
+              type="button"
+              aria-label="Supprimer la réalisation"
+              className="text-xs text-muted-foreground hover:text-destructive"
+              onClick={() => onChange(lines.filter((_, ai) => ai !== li))}
+            >
+              ✕
+            </button>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
 }

@@ -277,32 +277,11 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                             onChange={(v) => patchPos({ period: v })}
                           />
                         </div>
-                        <ul className="space-y-2">
-                          {pos.achievements.map((line, li) => (
-                            <li key={li} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
-                              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-brand" aria-hidden />
-                              <EditableText
-                                multiline
-                                className="flex-1"
-                                value={line}
-                                onChange={(v) =>
-                                  patchPos({ achievements: pos.achievements.map((a, ai) => (ai === li ? v : a)) })
-                                }
-                              />
-                              <EditModeOnly>
-                                <button
-                                  type="button"
-                                  className="text-xs text-muted-foreground hover:text-destructive"
-                                  onClick={() =>
-                                    patchPos({ achievements: pos.achievements.filter((_, ai) => ai !== li) })
-                                  }
-                                >
-                                  ✕
-                                </button>
-                              </EditModeOnly>
-                            </li>
-                          ))}
-                        </ul>
+                        <AchievementList
+                          lines={pos.achievements}
+                          onChange={(next) => patchPos({ achievements: next })}
+                        />
+
                         <EditModeOnly>
                           <div className="flex gap-4">
                             <button

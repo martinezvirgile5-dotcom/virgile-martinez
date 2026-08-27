@@ -287,7 +287,7 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                         positions: positions.map((p) => (p.id === pos.id ? { ...p, ...next } : p)),
                       });
                     return (
-                      <div key={pos.id} className="space-y-3 border-l border-border pl-4">
+                      <div key={pos.id} className="space-y-3 pt-4">
                         <div>
                           <EditableText
                             as="p"

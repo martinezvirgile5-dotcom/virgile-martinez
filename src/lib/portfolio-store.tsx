@@ -74,7 +74,6 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const storedLocale = window.localStorage.getItem("portfolio-locale");
     if (storedLocale === "en" || storedLocale === "fr") setLocale(storedLocale);
-    else if (navigator.language && !navigator.language.toLowerCase().startsWith("fr")) setLocale("en");
   }, []);
 
   useEffect(() => {

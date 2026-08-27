@@ -227,7 +227,9 @@
     background: #fff;
     color: #000;
   }
+  /* Supprime l'en-tête / pied de page générés par le navigateur
+     (date, titre de page, URL) en annulant la zone de marge. */
   @page {
-    margin: 14mm;
+    margin: 0;
   }
 }

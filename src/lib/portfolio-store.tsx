@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { Context, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { mergeContent, type PortfolioContent } from "./portfolio-content";
-import { applyDictionary, missingStrings, type Locale } from "./i18n";
+import { applyDictionary, collectStrings, missingStrings, type Locale } from "./i18n";
 import { translateStrings } from "./translate.functions";
 
 type Status = "loading" | "ready" | "error";
@@ -134,7 +134,7 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const translateAll = useCallback(
     async (options?: { force?: boolean }) => {
       const targets = options?.force
-        ? missingStrings({ ...content, translations: { en: {} } }, {})
+        ? collectStrings(content)
         : missingStrings(content, content.translations?.en);
       if (targets.length === 0) return 0;
       setTranslating(true);
@@ -155,9 +155,11 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
 
   const toggleMode = useCallback(() => setMode((m) => (m === "dark" ? "light" : "dark")), []);
 
+  // Edition always happens on the French source document.
+  const editing = isAdmin && editMode;
   const translated = useMemo(
-    () => (locale === "en" ? applyDictionary(content, content.translations?.en) : content),
-    [content, locale],
+    () => (locale === "en" && !editing ? applyDictionary(content, content.translations?.en) : content),
+    [content, locale, editing],
   );
   const missingCount = useMemo(() => missingStrings(content, content.translations?.en).length, [content]);
 

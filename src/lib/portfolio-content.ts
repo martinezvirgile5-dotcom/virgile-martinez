@@ -358,6 +358,13 @@ export const emptyExperience = (): Experience => ({
   links: [],
 });
 
+export const emptyPosition = (): Position => ({
+  id: uid(),
+  role: "Poste précédent dans l'entreprise",
+  period: "20XX — 20XX",
+  achievements: ["Réalisation clé avec une métrique."],
+});
+
 export const emptyProject = (): Project => ({
   id: uid(),
   name: "Nouveau projet",

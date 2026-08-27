@@ -2,6 +2,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { usePortfolio } from "@/lib/portfolio-store";
 import {
   emptyExperience,
+  emptyPosition,
   emptyProject,
   slugify,
   uid,

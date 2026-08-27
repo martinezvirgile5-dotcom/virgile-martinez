@@ -282,6 +282,10 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                             value={pos.period}
                             onChange={(v) => patchPos({ period: v })}
                           />
+                          <SummaryField
+                            value={pos.summary ?? ""}
+                            onChange={(v) => patchPos({ summary: v })}
+                          />
                         </div>
                         <AchievementList
                           lines={pos.achievements}

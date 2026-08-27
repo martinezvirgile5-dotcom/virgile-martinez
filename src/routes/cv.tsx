@@ -130,6 +130,19 @@ function CvSection({ section }: { section: Section }) {
                     <li key={i}>{a}</li>
                   ))}
                 </ul>
+                {(item.positions ?? []).map((pos) => (
+                  <div key={pos.id} className="mt-2">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <p className="font-medium">{pos.role}</p>
+                      <p className="text-xs text-muted-foreground">{pos.period}</p>
+                    </div>
+                    <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
+                      {pos.achievements.map((a, i) => (
+                        <li key={i}>{a}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </article>
             ))}
           </div>

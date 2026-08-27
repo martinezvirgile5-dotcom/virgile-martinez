@@ -8,6 +8,13 @@ export type LinkItem = {
   variant?: "primary" | "secondary" | "ghost" | undefined;
 };
 
+export type Position = {
+  id: string;
+  role: string;
+  period: string;
+  achievements: string[];
+};
+
 export type Experience = {
   id: string;
   company: string;
@@ -16,6 +23,8 @@ export type Experience = {
   location?: string | undefined;
   logoUrl?: string | undefined;
   achievements: string[];
+  /** Postes supplémentaires occupés dans la même entreprise (promotions, mobilité). */
+  positions?: Position[] | undefined;
   links: LinkItem[];
 };
 
@@ -347,6 +356,13 @@ export const emptyExperience = (): Experience => ({
   location: "Ville",
   achievements: ["Réalisation clé avec une métrique."],
   links: [],
+});
+
+export const emptyPosition = (): Position => ({
+  id: uid(),
+  role: "Poste précédent dans l'entreprise",
+  period: "20XX — 20XX",
+  achievements: ["Réalisation clé avec une métrique."],
 });
 
 export const emptyProject = (): Project => ({

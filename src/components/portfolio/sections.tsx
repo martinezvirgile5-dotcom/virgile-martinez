@@ -2,6 +2,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { usePortfolio } from "@/lib/portfolio-store";
 import {
   emptyExperience,
+  emptyPosition,
   emptyProject,
   slugify,
   uid,
@@ -9,6 +10,7 @@ import {
   type Experience,
   type Metric,
   type PortfolioContent,
+  type Position,
   type Project,
   type Section,
   type SkillGroup,
@@ -277,7 +279,96 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                       + Ajouter une réalisation
                     </button>
                   </EditModeOnly>
+
+                  {(item.positions ?? []).map((pos) => {
+                    const positions = item.positions ?? [];
+                    const patchPos = (next: Partial<Position>) =>
+                      patchItem(item.id, {
+                        positions: positions.map((p) => (p.id === pos.id ? { ...p, ...next } : p)),
+                      });
+                    return (
+                      <div key={pos.id} className="space-y-3 border-l border-border pl-4">
+                        <div>
+                          <EditableText
+                            as="p"
+                            className="text-sm text-brand"
+                            value={pos.role}
+                            onChange={(v) => patchPos({ role: v })}
+                          />
+                          <EditableText
+                            as="p"
+                            className="font-mono text-xs tracking-wide text-muted-foreground"
+                            value={pos.period}
+                            onChange={(v) => patchPos({ period: v })}
+                          />
+                        </div>
+                        <ul className="space-y-2">
+                          {pos.achievements.map((line, li) => (
+                            <li key={li} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
+                              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-border" aria-hidden />
+                              <EditableText
+                                multiline
+                                className="flex-1"
+                                value={line}
+                                onChange={(v) =>
+                                  patchPos({ achievements: pos.achievements.map((a, ai) => (ai === li ? v : a)) })
+                                }
+                              />
+                              <EditModeOnly>
+                                <button
+                                  type="button"
+                                  className="text-xs text-muted-foreground hover:text-destructive"
+                                  onClick={() =>
+                                    patchPos({ achievements: pos.achievements.filter((_, ai) => ai !== li) })
+                                  }
+                                >
+                                  ✕
+                                </button>
+                              </EditModeOnly>
+                            </li>
+                          ))}
+                        </ul>
+                        <EditModeOnly>
+                          <div className="flex gap-4">
+                            <button
+                              type="button"
+                              className="text-xs font-medium text-brand hover:underline"
+                              onClick={() =>
+                                patchPos({
+                                  achievements: [...pos.achievements, "Nouvelle réalisation avec une métrique."],
+                                })
+                              }
+                            >
+                              + Ajouter une réalisation
+                            </button>
+                            <button
+                              type="button"
+                              className="text-xs text-muted-foreground hover:text-destructive"
+                              onClick={() =>
+                                patchItem(item.id, { positions: positions.filter((p) => p.id !== pos.id) })
+                              }
+                            >
+                              Supprimer ce poste
+                            </button>
+                          </div>
+                        </EditModeOnly>
+                      </div>
+                    );
+                  })}
+
+                  <EditModeOnly>
+                    <button
+                      type="button"
+                      className="text-xs font-medium text-brand hover:underline"
+                      onClick={() =>
+                        patchItem(item.id, { positions: [...(item.positions ?? []), emptyPosition()] })
+                      }
+                    >
+                      + Ajouter un poste dans cette entreprise
+                    </button>
+                  </EditModeOnly>
                   <LinkEditor links={item.links} onChange={(links) => patchItem(item.id, { links })} />
+
                   <ItemToolbar
                     onUp={i > 0 ? () => setItems((items) => move(items, i, -1)) : undefined}
                     onDown={() => setItems((items) => move(items, i, 1))}

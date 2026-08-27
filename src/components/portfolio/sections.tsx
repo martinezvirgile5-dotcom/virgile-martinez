@@ -236,36 +236,11 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                       onChange={(v) => patchItem(item.id, { role: v })}
                     />
                   </div>
-                  <ul className="space-y-2">
-                    {item.achievements.map((line, li) => (
-                      <li key={li} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
-                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-brand" aria-hidden />
-                        <EditableText
-                          multiline
-                          className="flex-1"
-                          value={line}
-                          onChange={(v) =>
-                            patchItem(item.id, {
-                              achievements: item.achievements.map((a, ai) => (ai === li ? v : a)),
-                            })
-                          }
-                        />
-                        <EditModeOnly>
-                          <button
-                            type="button"
-                            className="text-xs text-muted-foreground hover:text-destructive"
-                            onClick={() =>
-                              patchItem(item.id, {
-                                achievements: item.achievements.filter((_, ai) => ai !== li),
-                              })
-                            }
-                          >
-                            ✕
-                          </button>
-                        </EditModeOnly>
-                      </li>
-                    ))}
-                  </ul>
+                  <AchievementList
+                    lines={item.achievements}
+                    onChange={(next) => patchItem(item.id, { achievements: next })}
+                  />
+
                   <EditModeOnly>
                     <button
                       type="button"

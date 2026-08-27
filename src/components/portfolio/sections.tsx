@@ -255,6 +255,8 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                     </button>
                   </EditModeOnly>
 
+                  <LinkEditor links={item.links} onChange={(links) => patchItem(item.id, { links })} />
+
                   {(item.positions ?? []).map((pos) => {
                     const positions = item.positions ?? [];
                     const patchPos = (next: Partial<Position>) =>
@@ -281,6 +283,8 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                           lines={pos.achievements}
                           onChange={(next) => patchPos({ achievements: next })}
                         />
+                        <LinkEditor links={pos.links ?? []} onChange={(links) => patchPos({ links })} />
+
 
                         <EditModeOnly>
                           <div className="flex gap-4">
@@ -320,8 +324,7 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                     >
                       + Ajouter un poste dans cette entreprise
                     </button>
-                  </EditModeOnly>
-                  <LinkEditor links={item.links} onChange={(links) => patchItem(item.id, { links })} />
+                   </EditModeOnly>
 
                   <ItemToolbar
                     onUp={i > 0 ? () => setItems((items) => move(items, i, -1)) : undefined}

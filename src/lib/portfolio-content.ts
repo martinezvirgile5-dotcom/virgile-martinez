@@ -13,6 +13,7 @@ export type Position = {
   role: string;
   period: string;
   achievements: string[];
+  links?: LinkItem[] | undefined;
 };
 
 export type Experience = {

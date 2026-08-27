@@ -17,7 +17,7 @@ import {
   type Testimonial,
 } from "@/lib/portfolio-content";
 import { cn } from "@/lib/utils";
-import { EditableText, ImageField, ItemToolbar, LinkEditor, Reveal, move } from "./editable";
+import { AchievementList, EditableText, ImageField, ItemToolbar, LinkEditor, Reveal, move } from "./editable";
 
 function useSection<T extends Section>(index: number) {
   const { update } = usePortfolio();

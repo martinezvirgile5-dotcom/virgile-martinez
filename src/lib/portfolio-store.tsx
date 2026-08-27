@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { Context, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { mergeContent, type PortfolioContent } from "./portfolio-content";
 
@@ -20,7 +20,17 @@ type Store = {
   toggleMode: () => void;
 };
 
-const PortfolioContext = createContext<Store | null>(null);
+type PortfolioGlobal = typeof globalThis & {
+  __portfolioContext?: Context<Store | null>;
+};
+
+// Keep one context identity across Vite hot updates. Without this, a provider
+// from the previous module instance can briefly coexist with consumers from
+// the new instance, making useContext read the default null value.
+const portfolioGlobal = globalThis as PortfolioGlobal;
+const PortfolioContext =
+  portfolioGlobal.__portfolioContext ?? createContext<Store | null>(null);
+portfolioGlobal.__portfolioContext = PortfolioContext;
 
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 

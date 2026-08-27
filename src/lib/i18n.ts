@@ -69,3 +69,21 @@ export function applyDictionary(
 export function missingStrings(content: PortfolioContent, dictionary: Record<string, string> | undefined): string[] {
   return collectStrings(content).filter((value) => !dictionary?.[value]);
 }
+
+/** Static interface chrome (buttons, footer, CV page) outside the editable document. */
+const uiStrings = {
+  cv: { fr: "CV", en: "Resume" },
+  printableCv: { fr: "Version CV imprimable", en: "Printable resume" },
+  editorSpace: { fr: "Espace d'édition", en: "Editor access" },
+  backToPortfolio: { fr: "← Retour au portfolio", en: "← Back to portfolio" },
+  originalPdf: { fr: "CV PDF original", en: "Original PDF resume" },
+  downloadPdf: { fr: "Télécharger en PDF", en: "Download as PDF" },
+  loading: { fr: "Chargement…", en: "Loading…" },
+  toDark: { fr: "Passer en mode sombre", en: "Switch to dark mode" },
+  toLight: { fr: "Passer en mode clair", en: "Switch to light mode" },
+  switchLanguage: { fr: "Passer en anglais", en: "Switch to French" },
+} as const;
+
+export type UiKey = keyof typeof uiStrings;
+
+export const t = (key: UiKey, locale: Locale): string => uiStrings[key][locale];

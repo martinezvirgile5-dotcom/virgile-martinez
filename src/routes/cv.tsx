@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Printer } from "lucide-react";
+import { ArrowUpRight, Printer } from "lucide-react";
 import { usePortfolio } from "@/lib/portfolio-store";
 import { t } from "@/lib/i18n";
 import type { Section } from "@/lib/portfolio-content";
@@ -64,12 +64,10 @@ function CvPage() {
       <header className="relative border-b border-border pb-5">
         <a
           href={typeof window !== "undefined" ? window.location.origin : "/"}
-          className="absolute right-0 top-0 inline-flex items-center gap-1.5 rounded-full border border-border-strong px-3 py-1.5 text-[11px] font-medium text-brand"
+          className="absolute right-0 top-0 inline-flex items-center gap-1 rounded-full border border-border-strong px-3 py-1.5 text-[11px] font-medium text-brand"
         >
           {t("onlineCv", locale)}
-          <span className="text-muted-foreground">
-            {typeof window !== "undefined" ? window.location.host : ""}
-          </span>
+          <ArrowUpRight className="size-3.5" />
         </a>
         <h1 className="text-3xl font-semibold tracking-tight">
           {hero.firstName} {hero.lastName}

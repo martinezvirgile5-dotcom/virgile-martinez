@@ -35,23 +35,17 @@ function CvPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-8 py-12 text-[13px] leading-relaxed">
-      <div className="mb-8 flex items-center justify-between gap-4">
-        <Link to="/" className="no-print link-underline text-xs text-muted-foreground">
+      <div className="no-print mb-8 flex items-center justify-between gap-4">
+        <Link to="/" className="link-underline text-xs text-muted-foreground">
           {t("backToPortfolio", locale)}
         </Link>
         <div className="flex gap-2">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 rounded-full border border-border-strong px-4 py-2 text-xs font-medium"
-          >
-            {t("onlineResume", locale)}
-          </Link>
           {hero.cvUrl && (
             <a
               href={hero.cvUrl}
               target="_blank"
               rel="noreferrer noopener"
-              className="no-print inline-flex items-center gap-2 rounded-full border border-border-strong px-4 py-2 text-xs font-medium"
+              className="inline-flex items-center gap-2 rounded-full border border-border-strong px-4 py-2 text-xs font-medium"
             >
               {t("originalPdf", locale)}
             </a>
@@ -59,7 +53,7 @@ function CvPage() {
           <button
             type="button"
             onClick={() => window.print()}
-            className="no-print inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-xs font-medium text-brand-foreground"
+            className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-xs font-medium text-brand-foreground"
           >
             <Printer className="size-3.5" />
             {t("downloadPdf", locale)}

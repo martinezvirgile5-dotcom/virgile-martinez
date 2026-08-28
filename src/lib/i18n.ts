@@ -76,6 +76,7 @@ const uiStrings = {
   printableCv: { fr: "Version CV imprimable", en: "Printable resume" },
   editorSpace: { fr: "Espace d'édition", en: "Editor access" },
   backToPortfolio: { fr: "← Retour au portfolio", en: "← Back to portfolio" },
+  onlineResume: { fr: "CV en ligne", en: "Online resume" },
   originalPdf: { fr: "CV PDF original", en: "Original PDF resume" },
   downloadPdf: { fr: "Télécharger en PDF", en: "Download as PDF" },
   loading: { fr: "Chargement…", en: "Loading…" },

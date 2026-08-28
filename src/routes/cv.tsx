@@ -61,7 +61,16 @@ function CvPage() {
         </div>
       </div>
 
-      <header className="border-b border-border pb-5">
+      <header className="relative border-b border-border pb-5">
+        <a
+          href={typeof window !== "undefined" ? window.location.origin : "/"}
+          className="absolute right-0 top-0 inline-flex items-center gap-1.5 rounded-full border border-border-strong px-3 py-1.5 text-[11px] font-medium text-brand"
+        >
+          {t("onlineCv", locale)}
+          <span className="text-muted-foreground">
+            {typeof window !== "undefined" ? window.location.host : ""}
+          </span>
+        </a>
         <h1 className="text-3xl font-semibold tracking-tight">
           {hero.firstName} {hero.lastName}
         </h1>

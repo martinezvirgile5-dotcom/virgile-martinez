@@ -49,6 +49,7 @@ export type SkillGroup = { id: string; name: string; items: string };
 export type Metric = { id: string; value: string; label: string };
 export type Testimonial = { id: string; quote: string; name: string; role: string };
 export type Education = { id: string; title: string; org: string; period: string; links: LinkItem[] };
+export type FaqItem = { id: string; question: string; answer: string };
 
 export type SectionKind =
   | "about"
@@ -93,6 +94,8 @@ export type PortfolioContent = {
   };
   seo: { title: string; description: string };
   sections: Section[];
+  /** Page dédiée /questions — hors sections, jamais exportée dans le PDF. */
+  faq: { title: string; intro: string; items: FaqItem[] };
   /** Dictionnaires de traduction : texte source (fr) -> traduction. */
   translations?: { en?: Record<string, string> } | undefined;
 };
@@ -300,6 +303,18 @@ export const defaultContent: PortfolioContent = {
       ],
     },
   ],
+  faq: {
+    title: "Questions & réponses",
+    intro: "Quelques questions qu'on me pose souvent sur ma façon de faire du produit.",
+    items: [
+      { id: uid(), question: "Comment je gère la discovery ?", answer: "" },
+      { id: uid(), question: "Un exemple où la data m'a fait changer d'avis ?", answer: "" },
+      { id: uid(), question: "Quelle utilisation de l'IA fais-tu aujourd'hui au quotidien ?", answer: "" },
+      { id: uid(), question: "Si demain tu devais lancer un nouvel agent, comment ferais-tu ?", answer: "" },
+      { id: uid(), question: "Quand un sujet est-il terminé ?", answer: "" },
+      { id: uid(), question: "Quel est ton produit référence ?", answer: "" },
+    ],
+  },
 };
 
 export function emptySection(kind: SectionKind): Section {
@@ -414,6 +429,11 @@ export function mergeContent(raw: unknown): PortfolioContent {
     hero: { ...defaultContent.hero, ...value.hero },
     seo: { ...defaultContent.seo, ...value.seo },
     sections: Array.isArray(value.sections) ? value.sections : defaultContent.sections,
+    faq: {
+      ...defaultContent.faq,
+      ...value.faq,
+      items: Array.isArray(value.faq?.items) ? value.faq.items : defaultContent.faq.items,
+    },
     translations: { en: value.translations?.en ?? {} },
   };
 }

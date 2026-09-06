@@ -74,7 +74,6 @@ function CvPage() {
         </h1>
         <p className="mt-1 text-base text-brand">{hero.title}</p>
         <p className="mt-2 max-w-2xl text-muted-foreground">{hero.tagline}</p>
-        
       </header>
 
       <div className="space-y-8 pt-6">

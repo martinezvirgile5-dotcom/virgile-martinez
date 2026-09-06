@@ -17,7 +17,6 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -34,15 +33,7 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
-    const fn =
-      mode === "signin"
-        ? supabase.auth.signInWithPassword({ email, password })
-        : supabase.auth.signUp({
-            email,
-            password,
-            options: { emailRedirectTo: `${window.location.origin}/` },
-          });
-    const { error } = await fn;
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
       setMessage(error.message);
@@ -58,9 +49,7 @@ function AuthPage() {
           ← Retour au portfolio
         </Link>
         <h1 className="mt-6 text-2xl font-semibold tracking-tight">Espace d'édition</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Réservé au propriétaire du site. Le premier compte créé devient administrateur.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">Réservé au propriétaire du site.</p>
         <form onSubmit={submit} className="mt-8 space-y-3">
           <input
             type="email"
@@ -75,7 +64,7 @@ function AuthPage() {
             type="password"
             required
             minLength={8}
-            autoComplete={mode === "signin" ? "current-password" : "new-password"}
+            autoComplete="current-password"
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -86,17 +75,10 @@ function AuthPage() {
             disabled={loading}
             className="w-full rounded-lg bg-brand px-3 py-2.5 text-sm font-medium text-brand-foreground transition-[filter] hover:brightness-110 disabled:opacity-50"
           >
-            {loading ? "…" : mode === "signin" ? "Se connecter" : "Créer mon compte"}
+            {loading ? "…" : "Se connecter"}
           </button>
         </form>
         {message && <p className="mt-3 text-xs text-destructive">{message}</p>}
-        <button
-          type="button"
-          className="mt-4 text-xs text-muted-foreground underline"
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-        >
-          {mode === "signin" ? "Créer le compte administrateur" : "J'ai déjà un compte"}
-        </button>
       </div>
     </main>
   );

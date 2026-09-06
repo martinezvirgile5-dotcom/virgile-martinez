@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type ElementType, type ReactNode } from "react";
-import { ArrowDown, ArrowUp, Copy, GripVertical, ImagePlus, Loader2, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Copy, Eye, EyeOff, GripVertical, ImagePlus, Loader2, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { uploadMedia, usePortfolio } from "@/lib/portfolio-store";
-import { uid, type LinkItem } from "@/lib/portfolio-content";
+import { uid, type Achievement, type LinkItem } from "@/lib/portfolio-content";
 
 /* ---------------------------------- texte --------------------------------- */
 
@@ -352,8 +352,8 @@ export function AchievementList({
   onChange,
   className,
 }: {
-  lines: string[];
-  onChange: (next: string[]) => void;
+  lines: Achievement[];
+  onChange: (next: Achievement[]) => void;
   className?: string | undefined;
 }) {
   const { editMode } = usePortfolio();
@@ -364,19 +364,25 @@ export function AchievementList({
     if (from === to || to < 0 || to >= lines.length) return;
     const next = [...lines];
     const [item] = next.splice(from, 1);
-    next.splice(to, 0, item as string);
+    next.splice(to, 0, item as Achievement);
     onChange(next);
   };
 
+  const visibleLines = editMode ? lines : lines.filter((line) => line.visible !== false);
+
   return (
     <ul className={cn("space-y-2", className)}>
-      {lines.map((line, li) => (
+      {visibleLines.map((line) => {
+        const li = lines.indexOf(line);
+        const hidden = line.visible === false;
+        return (
         <li
-          key={li}
+          key={line.id}
           className={cn(
             "flex gap-3 rounded-md text-sm leading-relaxed text-muted-foreground transition-colors",
             editMode && dragIndex !== null && overIndex === li && dragIndex !== li && "bg-brand-soft/70",
             editMode && dragIndex === li && "opacity-50",
+            hidden && "opacity-45",
           )}
           onDragOver={(e) => {
             if (dragIndex === null) return;
@@ -423,9 +429,20 @@ export function AchievementList({
           <EditableText
             multiline
             className="flex-1"
-            value={line}
-            onChange={(v) => onChange(lines.map((a, ai) => (ai === li ? v : a)))}
+            value={line.text}
+            onChange={(v) => onChange(lines.map((a, ai) => (ai === li ? { ...a, text: v } : a)))}
           />
+          {editMode && (
+            <button
+              type="button"
+              aria-label={hidden ? "Rendre visible" : "Masquer"}
+              title={hidden ? "Rendre visible" : "Masquer"}
+              className="text-muted-foreground hover:text-foreground"
+              onClick={() => onChange(lines.map((a, ai) => (ai === li ? { ...a, visible: hidden ? true : false } : a)))}
+            >
+              {hidden ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+            </button>
+          )}
           {editMode && (
             <button
               type="button"
@@ -437,7 +454,8 @@ export function AchievementList({
             </button>
           )}
         </li>
-      ))}
+        );
+      })}
     </ul>
   );
 }

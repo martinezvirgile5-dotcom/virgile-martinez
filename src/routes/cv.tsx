@@ -137,9 +137,11 @@ function CvSection({ section }: { section: Section }) {
                   <p className="mt-1 whitespace-pre-line text-muted-foreground">{item.summary}</p>
                 )}
                 <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
-                  {item.achievements.map((a, i) => (
-                    <li key={i}>{a}</li>
-                  ))}
+                  {item.achievements
+                    .filter((a) => a.visible !== false)
+                    .map((a) => (
+                      <li key={a.id}>{a.text}</li>
+                    ))}
                 </ul>
                 {(item.positions ?? []).map((pos) => (
                   <div key={pos.id} className="mt-2">
@@ -151,9 +153,11 @@ function CvSection({ section }: { section: Section }) {
                       <p className="mt-1 whitespace-pre-line text-muted-foreground">{pos.summary}</p>
                     )}
                     <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
-                      {pos.achievements.map((a, i) => (
-                        <li key={i}>{a}</li>
-                      ))}
+                      {pos.achievements
+                        .filter((a) => a.visible !== false)
+                        .map((a) => (
+                          <li key={a.id}>{a.text}</li>
+                        ))}
                     </ul>
                   </div>
                 ))}

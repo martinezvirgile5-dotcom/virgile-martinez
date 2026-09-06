@@ -1,6 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
 import { usePortfolio } from "@/lib/portfolio-store";
 import {
+  emptyAchievement,
   emptyExperience,
   emptyPosition,
   emptyProject,
@@ -271,7 +272,7 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                       className="text-xs font-medium text-brand hover:underline"
                       onClick={() =>
                         patchItem(item.id, {
-                          achievements: [...item.achievements, "Nouvelle réalisation avec une métrique."],
+                          achievements: [...item.achievements, emptyAchievement()],
                         })
                       }
                     >
@@ -321,7 +322,7 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                               className="text-xs font-medium text-brand hover:underline"
                               onClick={() =>
                                 patchPos({
-                                  achievements: [...pos.achievements, "Nouvelle réalisation avec une métrique."],
+                                  achievements: [...pos.achievements, emptyAchievement()],
                                 })
                               }
                             >

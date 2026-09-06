@@ -8,13 +8,20 @@ export type LinkItem = {
   variant?: "primary" | "secondary" | "ghost" | undefined;
 };
 
+export type Achievement = {
+  id: string;
+  text: string;
+  /** Masque cette ligne du portfolio et du CV exporté (par défaut visible). */
+  visible?: boolean | undefined;
+};
+
 export type Position = {
   id: string;
   role: string;
   period: string;
   /** Résumé court affiché juste sous l'intitulé du poste. */
   summary?: string | undefined;
-  achievements: string[];
+  achievements: Achievement[];
   links?: LinkItem[] | undefined;
 };
 
@@ -27,7 +34,7 @@ export type Experience = {
   logoUrl?: string | undefined;
   /** Résumé court affiché juste sous l'intitulé du poste. */
   summary?: string | undefined;
-  achievements: string[];
+  achievements: Achievement[];
   /** Postes supplémentaires occupés dans la même entreprise (promotions, mobilité). */
   positions?: Position[] | undefined;
   links: LinkItem[];
@@ -165,9 +172,12 @@ export const defaultContent: PortfolioContent = {
           period: "2022 — aujourd'hui",
           location: "Paris",
           achievements: [
-            "Refonte de l'activation : +40% de rétention à 90 jours sur 18 000 comptes.",
-            "Mise en place d'un framework de priorisation (impact / confiance / effort) adopté par les 4 squads.",
-            "Lancement du module facturation : €1,2M d'ARR incrémental en 3 trimestres.",
+            { id: uid(), text: "Refonte de l'activation : +40% de rétention à 90 jours sur 18 000 comptes." },
+            {
+              id: uid(),
+              text: "Mise en place d'un framework de priorisation (impact / confiance / effort) adopté par les 4 squads.",
+            },
+            { id: uid(), text: "Lancement du module facturation : €1,2M d'ARR incrémental en 3 trimestres." },
           ],
           links: [{ id: uid(), label: "Étude de cas", url: "" }],
         },
@@ -178,9 +188,12 @@ export const defaultContent: PortfolioContent = {
           period: "2019 — 2022",
           location: "Lyon",
           achievements: [
-            "Programme d'expérimentation : 47 A/B tests, +18% de conversion trial → paid.",
-            "Discovery continue (12 entretiens/mois) qui a réorienté la roadmap Q3 vers le self-serve.",
-            "Passage de l'analytics maison à Amplitude, adoption par 80% des équipes produit.",
+            { id: uid(), text: "Programme d'expérimentation : 47 A/B tests, +18% de conversion trial → paid." },
+            {
+              id: uid(),
+              text: "Discovery continue (12 entretiens/mois) qui a réorienté la roadmap Q3 vers le self-serve.",
+            },
+            { id: uid(), text: "Passage de l'analytics maison à Amplitude, adoption par 80% des équipes produit." },
           ],
           links: [],
         },
@@ -191,8 +204,8 @@ export const defaultContent: PortfolioContent = {
           period: "2017 — 2019",
           location: "Nantes",
           achievements: [
-            "Premier produit mobile de l'agence, 60 000 téléchargements la première année.",
-            "Mise en place du dual-track agile avec 3 développeurs et 1 designer.",
+            { id: uid(), text: "Premier produit mobile de l'agence, 60 000 téléchargements la première année." },
+            { id: uid(), text: "Mise en place du dual-track agile avec 3 développeurs et 1 designer." },
           ],
           links: [],
         },
@@ -372,13 +385,15 @@ export function emptySection(kind: SectionKind): Section {
   }
 }
 
+export const emptyAchievement = (): Achievement => ({ id: uid(), text: "Réalisation clé avec une métrique." });
+
 export const emptyExperience = (): Experience => ({
   id: uid(),
   company: "Entreprise",
   role: "Intitulé du poste",
   period: "20XX — 20XX",
   location: "Ville",
-  achievements: ["Réalisation clé avec une métrique."],
+  achievements: [emptyAchievement()],
   links: [],
 });
 
@@ -386,7 +401,7 @@ export const emptyPosition = (): Position => ({
   id: uid(),
   role: "Poste précédent dans l'entreprise",
   period: "20XX — 20XX",
-  achievements: ["Réalisation clé avec une métrique."],
+  achievements: [emptyAchievement()],
   links: [],
 });
 
@@ -421,6 +436,31 @@ export function slugify(value: string): string {
     .replace(/^-|-$/g, "");
 }
 
+/** Convertit les anciennes réalisations (simples chaînes) vers le format objet avec visibilité. */
+function normalizeAchievements(value: unknown): Achievement[] {
+  if (!Array.isArray(value)) return [];
+  return value.map((entry) =>
+    typeof entry === "string" ? { id: uid(), text: entry } : (entry as Achievement),
+  );
+}
+
+function normalizeSections(sections: Section[]): Section[] {
+  return sections.map((section) => {
+    if (section.kind !== "experience") return section;
+    return {
+      ...section,
+      items: section.items.map((item) => ({
+        ...item,
+        achievements: normalizeAchievements(item.achievements),
+        positions: item.positions?.map((position) => ({
+          ...position,
+          achievements: normalizeAchievements(position.achievements),
+        })),
+      })),
+    };
+  });
+}
+
 export function mergeContent(raw: unknown): PortfolioContent {
   if (!raw || typeof raw !== "object" || !("sections" in raw)) return defaultContent;
   const value = raw as PortfolioContent;
@@ -430,7 +470,7 @@ export function mergeContent(raw: unknown): PortfolioContent {
     theme: { ...defaultContent.theme, ...value.theme },
     hero: { ...defaultContent.hero, ...value.hero },
     seo: { ...defaultContent.seo, ...value.seo },
-    sections: Array.isArray(value.sections) ? value.sections : defaultContent.sections,
+    sections: normalizeSections(Array.isArray(value.sections) ? value.sections : defaultContent.sections),
     faq: {
       ...defaultContent.faq,
       ...value.faq,

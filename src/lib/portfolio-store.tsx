@@ -9,6 +9,8 @@ type Status = "loading" | "ready" | "error";
 
 type Store = {
   content: PortfolioContent;
+  /** Document source (français, non traduit) — utilisé pour des ancres d'URL stables entre les langues. */
+  sourceContent: PortfolioContent;
   status: Status;
   isAdmin: boolean;
   editMode: boolean;
@@ -165,6 +167,7 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Store>(
     () => ({
       content: translated,
+      sourceContent: content,
       status,
       isAdmin,
       editMode: isAdmin && editMode,
@@ -185,6 +188,7 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
     }),
     [
       translated,
+      content,
       status,
       isAdmin,
       editMode,

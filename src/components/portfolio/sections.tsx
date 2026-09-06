@@ -39,14 +39,17 @@ function SectionShell({
   children: React.ReactNode;
   className?: string;
 }) {
-  const { editMode, update } = usePortfolio();
+  const { editMode, update, sourceContent } = usePortfolio();
   const patch = useSection(index);
 
   if (!section.visible && !editMode) return null;
 
+  // Ancre stable entre les langues : basée sur le libellé source (français), jamais traduit.
+  const anchorLabel = sourceContent.sections.find((s) => s.id === section.id)?.label ?? section.label;
+
   return (
     <section
-      id={slugify(section.label)}
+      id={slugify(anchorLabel)}
       className={cn(
         "mx-auto w-full max-w-5xl px-6 py-20 md:py-28",
         !section.visible && "opacity-45",

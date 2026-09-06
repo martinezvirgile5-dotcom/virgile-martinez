@@ -5,7 +5,7 @@ import { slugify } from "@/lib/portfolio-content";
 import { t } from "@/lib/i18n";
 
 export function SiteNav() {
-  const { content, mode, toggleMode, locale, toggleLocale } = usePortfolio();
+  const { content, sourceContent, mode, toggleMode, locale, toggleLocale } = usePortfolio();
   const navItems = content.sections.filter((s) => s.visible);
 
   return (
@@ -15,17 +15,20 @@ export function SiteNav() {
           {content.hero.firstName} {content.hero.lastName}
         </Link>
         <ul className="ml-auto hidden items-center gap-5 lg:flex">
-          {navItems.map((section) => (
-            <li key={section.id}>
-              <Link
-                to="/"
-                hash={slugify(section.label)}
-                className="link-underline text-xs text-muted-foreground hover:text-foreground"
-              >
-                {section.label}
-              </Link>
-            </li>
-          ))}
+          {navItems.map((section) => {
+            const anchorLabel = sourceContent.sections.find((s) => s.id === section.id)?.label ?? section.label;
+            return (
+              <li key={section.id}>
+                <Link
+                  to="/"
+                  hash={slugify(anchorLabel)}
+                  className="link-underline text-xs text-muted-foreground hover:text-foreground"
+                >
+                  {section.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
         <Link
           to="/questions"

@@ -124,7 +124,7 @@ export const defaultContent: PortfolioContent = {
     title: "Senior Product Manager",
     tagline:
       "Je transforme des problèmes flous en produits qui bougent les métriques. 8 ans à construire des produits B2B SaaS, de la discovery au scale.",
-    availability: "Ouvert aux opportunités · Paris / remote",
+    availability: "",
     cvUrl: "",
     ctas: [
       { id: uid(), label: "Voir mes études de cas", url: "#projets", variant: "primary" },

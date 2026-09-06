@@ -78,9 +78,26 @@ function CvPage() {
       </header>
 
       <div className="space-y-8 pt-6">
-        {content.sections.filter((s) => s.visible).map((section) => (
-          <CvSection key={section.id} section={section} />
-        ))}
+        {content.sections
+          .filter((s) => s.visible)
+          .map((section) => (
+            <div key={section.id} className="space-y-8">
+              <CvSection section={section} />
+              {section.kind === "experience" && (
+                <div className="flex justify-center">
+                  <a
+                    href={typeof window !== "undefined" ? window.location.origin : "/"}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-2 rounded-full border border-border-strong px-4 py-2 text-xs font-medium text-brand"
+                  >
+                    {t("seeMoreOnline", locale)}
+                    <ArrowUpRight className="size-3.5" />
+                  </a>
+                </div>
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );

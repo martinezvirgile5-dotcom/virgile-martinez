@@ -83,6 +83,7 @@ const uiStrings = {
   toLight: { fr: "Passer en mode clair", en: "Switch to light mode" },
   switchLanguage: { fr: "Passer en anglais", en: "Switch to French" },
   onlineCv: { fr: "CV en ligne", en: "Online resume" },
+  seeMoreOnline: { fr: "Voir + en ligne", en: "See more online" },
 } as const;
 
 export type UiKey = keyof typeof uiStrings;

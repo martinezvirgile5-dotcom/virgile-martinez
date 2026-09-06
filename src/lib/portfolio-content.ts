@@ -8,6 +8,16 @@ export type LinkItem = {
   variant?: "primary" | "secondary" | "ghost" | undefined;
 };
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Résout l'URL d'un lien : préfixe automatiquement une adresse email nue en "mailto:". */
+export function linkHref(url: string): string {
+  const trimmed = url.trim();
+  if (!trimmed) return "#";
+  if (EMAIL_RE.test(trimmed)) return `mailto:${trimmed}`;
+  return trimmed;
+}
+
 export type Achievement = {
   id: string;
   text: string;

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ElementType, type ReactNode } from "r
 import { ArrowDown, ArrowUp, Copy, Eye, EyeOff, GripVertical, ImagePlus, Loader2, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { uploadMedia, usePortfolio } from "@/lib/portfolio-store";
-import { uid, type Achievement, type LinkItem } from "@/lib/portfolio-content";
+import { linkHref, uid, type Achievement, type LinkItem } from "@/lib/portfolio-content";
 
 /* ---------------------------------- texte --------------------------------- */
 
@@ -113,7 +113,7 @@ export function CtaLink({ link, className }: { link: LinkItem; className?: strin
   const external = /^https?:/i.test(link.url);
   return (
     <a
-      href={link.url || "#"}
+      href={linkHref(link.url)}
       target={external ? "_blank" : undefined}
       rel={external ? "noreferrer noopener" : undefined}
       className={cn(
@@ -131,7 +131,7 @@ export function InlineLink({ link }: { link: LinkItem }) {
   const external = /^https?:/i.test(link.url);
   return (
     <a
-      href={link.url || "#"}
+      href={linkHref(link.url)}
       target={external ? "_blank" : undefined}
       rel={external ? "noreferrer noopener" : undefined}
       className="link-underline text-sm font-medium text-brand"

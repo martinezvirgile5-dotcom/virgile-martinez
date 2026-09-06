@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Printer } from "lucide-react";
 import { usePortfolio } from "@/lib/portfolio-store";
 import { t } from "@/lib/i18n";
-import type { Section } from "@/lib/portfolio-content";
+import { linkHref, type Section } from "@/lib/portfolio-content";
 
 export const Route = createFileRoute("/cv")({
   head: () => ({
@@ -261,7 +261,7 @@ function CvSection({ section }: { section: Section }) {
               .map((l) => (
                 <li key={l.id}>
                   <span className="font-medium">{l.label} : </span>
-                  <a className="text-brand" href={l.url}>
+                  <a className="text-brand" href={linkHref(l.url)}>
                     {l.url.replace(/^mailto:/, "")}
                   </a>
                 </li>

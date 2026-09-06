@@ -122,7 +122,7 @@ function CvSection({ section }: { section: Section }) {
         <section>
           <Heading>{section.title}</Heading>
           <div className="space-y-4">
-            {section.items.map((item) => (
+            {section.items.filter((item) => item.visible !== false).map((item) => (
               <article key={item.id}>
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <p className="font-semibold">

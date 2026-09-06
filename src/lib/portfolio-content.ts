@@ -31,6 +31,8 @@ export type Experience = {
   /** Postes supplémentaires occupés dans la même entreprise (promotions, mobilité). */
   positions?: Position[] | undefined;
   links: LinkItem[];
+  /** Masque cette expérience du portfolio et du CV exporté (par défaut visible). */
+  visible?: boolean | undefined;
 };
 
 export type Project = {

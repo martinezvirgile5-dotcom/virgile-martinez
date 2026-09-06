@@ -202,6 +202,7 @@ function SummaryField({ value, onChange }: { value: string; onChange: (next: str
 /* ------------------------------- experience ------------------------------- */
 
 function ExperienceSection({ section, index }: { section: Extract<Section, { kind: "experience" }>; index: number }) {
+  const { editMode } = usePortfolio();
   const patch = useSection<typeof section>(index);
   const setItems = (fn: (items: Experience[]) => Experience[]) => patch((s) => void (s.items = fn(s.items)));
   const patchItem = (id: string, next: Partial<Experience>) =>
@@ -211,8 +212,11 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
     <SectionShell section={section} index={index}>
       <SectionHeading section={section} index={index} />
       <ol className="space-y-px overflow-hidden rounded-2xl border border-border bg-border">
-        {section.items.map((item, i) => (
-          <li key={item.id} className="bg-card">
+        {section.items.map((item, i) => {
+          const hidden = item.visible === false;
+          if (hidden && !editMode) return null;
+          return (
+          <li key={item.id} className={cn("bg-card", hidden && "opacity-45")}>
             <Reveal delay={i * 60}>
               <article className="grid gap-6 p-6 md:grid-cols-[13rem_minmax(0,1fr)] md:p-8">
                 <div className="space-y-3">
@@ -350,17 +354,30 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                     </button>
                    </EditModeOnly>
 
-                  <ItemToolbar
-                    onUp={i > 0 ? () => setItems((items) => move(items, i, -1)) : undefined}
-                    onDown={() => setItems((items) => move(items, i, 1))}
-                    onDuplicate={() => setItems((items) => [...items, { ...item, id: uid() }])}
-                    onDelete={() => setItems((items) => items.filter((it) => it.id !== item.id))}
-                  />
+                  <div className="flex flex-wrap items-center gap-2">
+                    <EditModeOnly>
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-1 text-xs text-muted-foreground"
+                        onClick={() => patchItem(item.id, { visible: hidden ? true : false })}
+                      >
+                        {hidden ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                        {hidden ? "Masqué" : "Visible"}
+                      </button>
+                    </EditModeOnly>
+                    <ItemToolbar
+                      onUp={i > 0 ? () => setItems((items) => move(items, i, -1)) : undefined}
+                      onDown={() => setItems((items) => move(items, i, 1))}
+                      onDuplicate={() => setItems((items) => [...items, { ...item, id: uid() }])}
+                      onDelete={() => setItems((items) => items.filter((it) => it.id !== item.id))}
+                    />
+                  </div>
                 </div>
               </article>
             </Reveal>
           </li>
-        ))}
+          );
+        })}
       </ol>
       <EditModeOnly>
         <button type="button" className={addBtn} onClick={() => setItems((items) => [...items, emptyExperience()])}>

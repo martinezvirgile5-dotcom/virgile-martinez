@@ -24,8 +24,15 @@ function AuthPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) void navigate({ to: "/" });
+    // Revalidate the stored session: a stale/revoked token must be cleared,
+    // otherwise the page keeps bouncing instead of letting the owner sign in.
+    void supabase.auth.getUser().then(async ({ data, error }) => {
+      if (data?.user && !error) {
+        void navigate({ to: "/" });
+        return;
+      }
+      const { data: session } = await supabase.auth.getSession();
+      if (session.session) await supabase.auth.signOut({ scope: "local" });
     });
   }, [navigate]);
 
@@ -33,14 +40,16 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (error) {
-      setMessage(error.message);
+    if (error || !data.session) {
+      setMessage(error?.message ?? "Connexion impossible, réessayez.");
       return;
     }
-    await navigate({ to: "/" });
+    // Full navigation so the freshly stored session is picked up everywhere.
+    window.location.assign("/");
   };
+
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-6">

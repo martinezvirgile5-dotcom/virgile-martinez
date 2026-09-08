@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { Check, Languages, LogOut, Palette, Pencil, Plus, RotateCcw, Save } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { BarChart3, Check, Languages, LogOut, Palette, Pencil, Plus, RotateCcw, Save } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { usePortfolio } from "@/lib/portfolio-store";
@@ -70,6 +70,10 @@ export function AdminBar() {
             <Plus className="size-3.5" />
             Section
           </button>
+          <Link to="/stats" className={chip}>
+            <BarChart3 className="size-3.5" />
+            Stats
+          </Link>
           <button
             type="button"
             className={cn(chip, "hidden sm:inline-flex")}

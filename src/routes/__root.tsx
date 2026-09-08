@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { PortfolioProvider } from "../lib/portfolio-store";
 import { Toaster } from "../components/ui/sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { supabase } from "../integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
@@ -119,6 +120,14 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    // Compteur de visites anonyme : un horodatage, rien d'autre.
+    supabase
+      .from("site_visits")
+      .insert({})
+      .then(undefined, () => {});
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

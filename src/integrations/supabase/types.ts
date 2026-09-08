@@ -32,21 +32,6 @@ export type Database = {
         }
         Relationships: []
       }
-      site_visits: {
-        Row: {
-          id: string
-          visited_at: string
-        }
-        Insert: {
-          id?: string
-          visited_at?: string
-        }
-        Update: {
-          id?: string
-          visited_at?: string
-        }
-        Relationships: []
-      }
       user_roles: {
         Row: {
           created_at: string

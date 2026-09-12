@@ -11,6 +11,9 @@ export function SiteFooter() {
           © {new Date().getFullYear()} {content.hero.firstName} {content.hero.lastName} — {content.hero.title}
         </p>
         <div className="flex items-center gap-4">
+          <Link to="/mentions-legales" className="link-underline">
+            Mentions légales
+          </Link>
           <Link to="/cv" className="link-underline">
             {t("printableCv", locale)}
           </Link>

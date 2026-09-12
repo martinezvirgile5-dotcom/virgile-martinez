@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CvRouteImport } from './routes/cv'
+import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as QuestionsRouteImport } from './routes/questions'
 import { Route as StatsRouteImport } from './routes/stats'
 
@@ -30,6 +31,11 @@ const CvRoute = CvRouteImport.update({
   path: '/cv',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
+  id: '/mentions-legales',
+  path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuestionsRoute = QuestionsRouteImport.update({
   id: '/questions',
   path: '/questions',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cv': typeof CvRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/questions': typeof QuestionsRoute
   '/stats': typeof StatsRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cv': typeof CvRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/questions': typeof QuestionsRoute
   '/stats': typeof StatsRoute
 }
@@ -60,21 +68,31 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cv': typeof CvRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/questions': typeof QuestionsRoute
   '/stats': typeof StatsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/cv' | '/questions' | '/stats'
+  fullPaths:
+    '/' | '/auth' | '/cv' | '/mentions-legales' | '/questions' | '/stats'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/cv' | '/questions' | '/stats'
-  id: '__root__' | '/' | '/auth' | '/cv' | '/questions' | '/stats'
+  to: '/' | '/auth' | '/cv' | '/mentions-legales' | '/questions' | '/stats'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/cv'
+    | '/mentions-legales'
+    | '/questions'
+    | '/stats'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   CvRoute: typeof CvRoute
+  MentionsLegalesRoute: typeof MentionsLegalesRoute
   QuestionsRoute: typeof QuestionsRoute
   StatsRoute: typeof StatsRoute
 }
@@ -102,6 +120,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CvRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentions-legales': {
+      id: '/mentions-legales'
+      path: '/mentions-legales'
+      fullPath: '/mentions-legales'
+      preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/questions': {
       id: '/questions'
       path: '/questions'
@@ -123,6 +148,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   CvRoute: CvRoute,
+  MentionsLegalesRoute: MentionsLegalesRoute,
   QuestionsRoute: QuestionsRoute,
   StatsRoute: StatsRoute,
 }

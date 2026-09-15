@@ -34,7 +34,7 @@ function CvPage() {
   if (status === "loading") return <div className="p-10 text-sm text-muted-foreground">{t("loading", locale)}</div>;
 
   return (
-    <div className="mx-auto max-w-3xl px-8 py-12 text-[13px] leading-relaxed">
+    <div className="mx-auto max-w-3xl px-8 py-8 text-[13px] leading-relaxed">
       <div className="no-print mb-8 flex items-center justify-between gap-4">
         <Link to="/" className="link-underline text-xs text-muted-foreground">
           {t("backToPortfolio", locale)}
@@ -69,11 +69,11 @@ function CvPage() {
         <p className="mt-2 max-w-2xl text-muted-foreground">{hero.tagline}</p>
       </header>
 
-      <div className="space-y-8 pt-6">
+      <div className="space-y-5 pt-4">
         {content.sections
           .filter((s) => s.visible)
           .map((section) => (
-            <div key={section.id} className="space-y-8">
+            <div key={section.id} className="space-y-5">
               <CvSection section={section} />
               {section.kind === "experience" && (
                 <div className="flex justify-center">
@@ -97,7 +97,7 @@ function CvPage() {
 
 function Heading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-3 border-b border-border pb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+    <h2 className="mb-2 border-b border-border pb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
       {children}
     </h2>
   );

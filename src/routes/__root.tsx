@@ -123,6 +123,14 @@ function RootComponent() {
 
   useEffect(() => {
     // Compteur de visites anonyme : un horodatage, rien d'autre.
+    // On ignore les visites depuis l'aperçu Lovable (lovable.dev, localhost,
+    // iframe intégrée) pour ne compter que le vrai trafic.
+    const inLovablePreview =
+      window.location.hostname.includes("lovable.dev") ||
+      window.location.hostname === "localhost" ||
+      document.referrer.includes("lovable.dev") ||
+      window.self !== window.top;
+    if (inLovablePreview) return;
     supabase
       .from("site_visits")
       .insert({})

@@ -61,7 +61,7 @@ function CvPage() {
         </div>
       </div>
 
-      <header className="border-b border-border pb-5">
+      <header className="pb-5">
         <h1 className="text-3xl font-semibold tracking-tight">
           {hero.firstName} {hero.lastName}
         </h1>

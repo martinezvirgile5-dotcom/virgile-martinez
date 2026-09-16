@@ -27,6 +27,13 @@ function CvPage() {
   const { content, status, locale } = usePortfolio();
   const { hero } = content;
 
+  const contactSection = content.sections.find((s) => s.kind === "contact");
+  const emailUrl =
+    contactSection?.kind === "contact"
+      ? contactSection.links.find((l) => l.url.startsWith("mailto:"))?.url
+      : undefined;
+  const email = emailUrl?.replace(/^mailto:/, "");
+
   useEffect(() => {
     document.documentElement.classList.remove("dark");
   }, []);

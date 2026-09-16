@@ -28,11 +28,13 @@ function CvPage() {
   const { hero } = content;
 
   const contactSection = content.sections.find((s) => s.kind === "contact");
-  const emailUrl =
+  const emailRaw =
     contactSection?.kind === "contact"
-      ? contactSection.links.find((l) => l.url.startsWith("mailto:"))?.url
+      ? contactSection.links.find(
+          (l) => l.url.startsWith("mailto:") || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(l.url.trim()),
+        )?.url
       : undefined;
-  const email = emailUrl?.replace(/^mailto:/, "");
+  const email = emailRaw?.trim().replace(/^mailto:/, "");
 
   useEffect(() => {
     document.documentElement.classList.remove("dark");

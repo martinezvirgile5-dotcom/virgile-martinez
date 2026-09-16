@@ -71,6 +71,14 @@ function CvPage() {
       <header className="pb-5">
         <h1 className="text-3xl font-semibold tracking-tight">
           {hero.firstName} {hero.lastName}
+          {email && (
+            <a
+              href={`mailto:${email}`}
+              className="ml-3 align-middle text-xs font-normal tracking-normal text-muted-foreground"
+            >
+              {email}
+            </a>
+          )}
         </h1>
         <p className="mt-1 text-base text-brand">{hero.title}</p>
         <p className="mt-2 max-w-2xl text-muted-foreground">{hero.tagline}</p>

@@ -212,14 +212,67 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
   const patchItem = (id: string, next: Partial<Experience>) =>
     setItems((items) => items.map((it) => (it.id === id ? { ...it, ...next } : it)));
 
+  type PositionFields = Pick<Position, "role" | "period" | "summary" | "achievements" | "links">;
+  /** Un poste dans l'entreprise : rôle, période, résumé, réalisations et liens, marqué par une puce. */
+  const renderPositionBlock = (
+    data: PositionFields,
+    patchPos: (next: PositionFields) => void,
+    key?: string,
+    onDelete?: () => void,
+  ) => (
+    <div key={key} className="flex items-start gap-2.5">
+      <span aria-hidden className="mt-[0.6rem] size-1.5 shrink-0 rounded-full bg-brand" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <EditableText
+          as="p"
+          className="text-sm font-medium text-brand"
+          value={data.role}
+          onChange={(v) => patchPos({ role: v })}
+        />
+        <EditableText
+          as="p"
+          className="font-mono text-xs tracking-wide text-muted-foreground"
+          value={data.period}
+          onChange={(v) => patchPos({ period: v })}
+        />
+        <SummaryField value={data.summary ?? ""} onChange={(v) => patchPos({ summary: v })} />
+        <AchievementList lines={data.achievements} onChange={(next) => patchPos({ achievements: next })} />
+        <LinkEditor links={data.links ?? []} onChange={(links) => patchPos({ links })} />
+        <EditModeOnly>
+          <div className="flex gap-4">
+            <button
+              type="button"
+              className="text-xs font-medium text-brand hover:underline"
+              onClick={() => patchPos({ achievements: [...data.achievements, emptyAchievement()] })}
+            >
+              + Ajouter une réalisation
+            </button>
+            {onDelete && (
+              <button
+                type="button"
+                className="text-xs text-muted-foreground hover:text-destructive"
+                onClick={onDelete}
+              >
+                Supprimer ce poste
+              </button>
+            )}
+          </div>
+        </EditModeOnly>
+      </div>
+    </div>
+  );
+
+
   return (
     <SectionShell section={section} index={index}>
       <SectionHeading section={section} index={index} />
       <ol className="space-y-px overflow-hidden rounded-2xl border border-border bg-border">
         {section.items.map((item, i) => {
           const hidden = item.visible === false;
+          const hasPositions = (item.positions ?? []).length > 0;
           if (hidden && !editMode) return null;
           return (
+
           <li key={item.id} className={cn("bg-card", hidden && "opacity-45")}>
             <Reveal delay={i * 60}>
               <article className="grid gap-6 p-6 md:grid-cols-[13rem_minmax(0,1fr)] md:p-8">
@@ -232,12 +285,15 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                     alt={`Logo ${item.company}`}
                     hint="Logo"
                   />
-                  <EditableText
-                    as="p"
-                    className="font-mono text-xs tracking-wide text-muted-foreground"
-                    value={item.period}
-                    onChange={(v) => patchItem(item.id, { period: v })}
-                  />
+                  {!hasPositions && (
+                    <EditableText
+                      as="p"
+                      className="font-mono text-xs tracking-wide text-muted-foreground"
+                      value={item.period}
+                      onChange={(v) => patchItem(item.id, { period: v })}
+                    />
+                  )}
+
                   <EditableText
                     as="p"
                     className="text-xs text-muted-foreground"

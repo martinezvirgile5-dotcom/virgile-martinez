@@ -302,7 +302,14 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                   />
                 </div>
                 <div className="space-y-4">
+                  <EditableText
+                    as="h3"
+                    className="text-xl font-medium tracking-tight"
+                    value={item.company}
+                    onChange={(v) => patchItem(item.id, { company: v })}
+                  />
                   {hasPositions ? (
+
                     <div className="space-y-6 pl-4 md:pl-6">
                       {renderPositionBlock(
                         {
@@ -364,66 +371,6 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                   )}
 
 
-                  {(item.positions ?? []).map((pos) => {
-                    const positions = item.positions ?? [];
-                    const patchPos = (next: Partial<Position>) =>
-                      patchItem(item.id, {
-                        positions: positions.map((p) => (p.id === pos.id ? { ...p, ...next } : p)),
-                      });
-                    return (
-                      <div key={pos.id} className="space-y-3 pt-4">
-                        <div>
-                          <EditableText
-                            as="p"
-                            className="text-sm text-brand"
-                            value={pos.role}
-                            onChange={(v) => patchPos({ role: v })}
-                          />
-                          <EditableText
-                            as="p"
-                            className="font-mono text-xs tracking-wide text-muted-foreground"
-                            value={pos.period}
-                            onChange={(v) => patchPos({ period: v })}
-                          />
-                          <SummaryField
-                            value={pos.summary ?? ""}
-                            onChange={(v) => patchPos({ summary: v })}
-                          />
-                        </div>
-                        <AchievementList
-                          lines={pos.achievements}
-                          onChange={(next) => patchPos({ achievements: next })}
-                        />
-                        <LinkEditor links={pos.links ?? []} onChange={(links) => patchPos({ links })} />
-
-
-                        <EditModeOnly>
-                          <div className="flex gap-4">
-                            <button
-                              type="button"
-                              className="text-xs font-medium text-brand hover:underline"
-                              onClick={() =>
-                                patchPos({
-                                  achievements: [...pos.achievements, emptyAchievement()],
-                                })
-                              }
-                            >
-                              + Ajouter une réalisation
-                            </button>
-                            <button
-                              type="button"
-                              className="text-xs text-muted-foreground hover:text-destructive"
-                              onClick={() =>
-                                patchItem(item.id, { positions: positions.filter((p) => p.id !== pos.id) })
-                              }
-                            >
-                              Supprimer ce poste
-                            </button>
-                          </div>
-                        </EditModeOnly>
-                      </div>
-                    );
-                  })}
 
                   <EditModeOnly>
                     <button

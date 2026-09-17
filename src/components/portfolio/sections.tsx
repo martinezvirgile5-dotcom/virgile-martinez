@@ -216,7 +216,8 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
   /** Un poste dans l'entreprise : rôle, période, résumé, réalisations et liens, marqué par une puce. */
   const renderPositionBlock = (
     data: PositionFields,
-    patchPos: (next: PositionFields) => void,
+    patchPos: (next: Partial<PositionFields>) => void,
+
     key?: string,
     onDelete?: () => void,
   ) => (
@@ -319,7 +320,8 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                           achievements: item.achievements,
                           links: item.links,
                         },
-                        (next) => patchItem(item.id, next),
+                        (next) => patchItem(item.id, next as Partial<Experience>),
+
                       )}
                       {(item.positions ?? []).map((pos) =>
                         renderPositionBlock(

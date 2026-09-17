@@ -148,50 +148,70 @@ function CvSection({ section }: { section: Section }) {
         <section>
           <Heading>{section.title}</Heading>
           <div className="space-y-4">
-            {section.items.filter((item) => item.visible !== false).map((item) => (
-              <article key={item.id}>
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <p className="font-semibold">
-                    {item.role} · {item.company}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {item.period}
-                    {item.location ? ` · ${item.location}` : ""}
-                  </p>
-                </div>
-                {item.summary?.trim() && (
-                  <p className="mt-1 whitespace-pre-line text-muted-foreground">{item.summary}</p>
-                )}
-                <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
-                  {item.achievements
-                    .filter((a) => a.visible !== false)
-                    .map((a) => (
-                      <li key={a.id}>{a.text}</li>
-                    ))}
-                </ul>
-                {(item.positions ?? []).map((pos) => (
-                  <div key={pos.id} className="mt-2">
+            {section.items.filter((item) => item.visible !== false).map((item) => {
+              const hasPositions = (item.positions ?? []).length > 0;
+              if (!hasPositions) {
+                return (
+                  <article key={item.id}>
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <p className="font-medium">{pos.role}</p>
-                      <p className="text-xs text-muted-foreground">{pos.period}</p>
+                      <p className="font-semibold">
+                        {item.role} · {item.company}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.period}
+                        {item.location ? ` · ${item.location}` : ""}
+                      </p>
                     </div>
-                    {pos.summary?.trim() && (
-                      <p className="mt-1 whitespace-pre-line text-muted-foreground">{pos.summary}</p>
+                    {item.summary?.trim() && (
+                      <p className="mt-1 whitespace-pre-line text-muted-foreground">{item.summary}</p>
                     )}
                     <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
-                      {pos.achievements
+                      {item.achievements
                         .filter((a) => a.visible !== false)
                         .map((a) => (
                           <li key={a.id}>{a.text}</li>
                         ))}
                     </ul>
+                  </article>
+                );
+              }
+              const positions = [
+                { id: "main", role: item.role, period: item.period, summary: item.summary, achievements: item.achievements },
+                ...(item.positions ?? []),
+              ];
+              return (
+                <article key={item.id}>
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <p className="font-semibold">{item.company}</p>
+                    {item.location && <p className="text-xs text-muted-foreground">{item.location}</p>}
                   </div>
-                ))}
-              </article>
-            ))}
+                  <div className="mt-1 space-y-2 pl-5">
+                    {positions.map((pos) => (
+                      <div key={pos.id}>
+                        <div className="flex flex-wrap items-baseline justify-between gap-2">
+                          <p className="font-medium">{pos.role}</p>
+                          <p className="text-xs text-muted-foreground">{pos.period}</p>
+                        </div>
+                        {pos.summary?.trim() && (
+                          <p className="mt-0.5 whitespace-pre-line text-muted-foreground">{pos.summary}</p>
+                        )}
+                        <ul className="mt-0.5 list-disc space-y-1 pl-5 text-muted-foreground">
+                          {pos.achievements
+                            .filter((a) => a.visible !== false)
+                            .map((a) => (
+                              <li key={a.id}>{a.text}</li>
+                            ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
       );
+
     case "projects":
       return (
         <section>

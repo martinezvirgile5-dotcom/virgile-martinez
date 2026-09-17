@@ -302,44 +302,67 @@ function ExperienceSection({ section, index }: { section: Extract<Section, { kin
                   />
                 </div>
                 <div className="space-y-4">
-                  <div>
-                    <EditableText
-                      as="h3"
-                      className="text-xl font-medium tracking-tight"
-                      value={item.company}
-                      onChange={(v) => patchItem(item.id, { company: v })}
-                    />
-                    <EditableText
-                      as="p"
-                      className="text-sm text-brand"
-                      value={item.role}
-                      onChange={(v) => patchItem(item.id, { role: v })}
-                    />
-                    <SummaryField
-                      value={item.summary ?? ""}
-                      onChange={(v) => patchItem(item.id, { summary: v })}
-                    />
-                  </div>
-                  <AchievementList
-                    lines={item.achievements}
-                    onChange={(next) => patchItem(item.id, { achievements: next })}
-                  />
+                  {hasPositions ? (
+                    <div className="space-y-6 pl-4 md:pl-6">
+                      {renderPositionBlock(
+                        {
+                          role: item.role,
+                          period: item.period,
+                          summary: item.summary,
+                          achievements: item.achievements,
+                          links: item.links,
+                        },
+                        (next) => patchItem(item.id, next),
+                      )}
+                      {(item.positions ?? []).map((pos) =>
+                        renderPositionBlock(
+                          pos,
+                          (next) =>
+                            patchItem(item.id, {
+                              positions: (item.positions ?? []).map((p) => (p.id === pos.id ? { ...p, ...next } : p)),
+                            }),
+                          pos.id,
+                          () => patchItem(item.id, { positions: (item.positions ?? []).filter((p) => p.id !== pos.id) }),
+                        ),
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      <div>
+                        <EditableText
+                          as="p"
+                          className="text-sm text-brand"
+                          value={item.role}
+                          onChange={(v) => patchItem(item.id, { role: v })}
+                        />
+                        <SummaryField
+                          value={item.summary ?? ""}
+                          onChange={(v) => patchItem(item.id, { summary: v })}
+                        />
+                      </div>
+                      <AchievementList
+                        lines={item.achievements}
+                        onChange={(next) => patchItem(item.id, { achievements: next })}
+                      />
 
-                  <EditModeOnly>
-                    <button
-                      type="button"
-                      className="text-xs font-medium text-brand hover:underline"
-                      onClick={() =>
-                        patchItem(item.id, {
-                          achievements: [...item.achievements, emptyAchievement()],
-                        })
-                      }
-                    >
-                      + Ajouter une réalisation
-                    </button>
-                  </EditModeOnly>
+                      <EditModeOnly>
+                        <button
+                          type="button"
+                          className="text-xs font-medium text-brand hover:underline"
+                          onClick={() =>
+                            patchItem(item.id, {
+                              achievements: [...item.achievements, emptyAchievement()],
+                            })
+                          }
+                        >
+                          + Ajouter une réalisation
+                        </button>
+                      </EditModeOnly>
 
-                  <LinkEditor links={item.links} onChange={(links) => patchItem(item.id, { links })} />
+                      <LinkEditor links={item.links} onChange={(links) => patchItem(item.id, { links })} />
+                    </>
+                  )}
+
 
                   {(item.positions ?? []).map((pos) => {
                     const positions = item.positions ?? [];
